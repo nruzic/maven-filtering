@@ -84,6 +84,7 @@ public final class PropertyUtils
         if ( !propFile.exists() )
         {
             logger.warn( "Property file not found, ignoring property file '" + propFile.getAbsolutePath() + "'" );
+            return new Properties();
             //throw new FileNotFoundException( propFile.toString() );
         }
 
