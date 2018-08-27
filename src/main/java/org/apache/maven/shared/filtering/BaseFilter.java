@@ -214,7 +214,8 @@ class BaseFilter
                 }
                 catch ( IOException e )
                 {
-                    throw new MavenFilteringException( "Error loading property file '" + filterFile + "'", e );
+                    this.getLogger().warn( "Error loading property file '" + filterFile + "'", e );
+                    //throw new MavenFilteringException( "Error loading property file '" + filterFile + "'", e );
                 }
             }
         }
