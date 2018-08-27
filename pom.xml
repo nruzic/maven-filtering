@@ -158,6 +158,27 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>${plugin-version-maven-release-plugin}</version>
+        <configuration>
+            <!-- automatically assign parent version to submodules 
+                if submodule is not specifying it's own version -->
+            <autoVersionSubmodules>true</autoVersionSubmodules>
+            <!-- this is a hack to trigger custom release profile 
+                (not the one from master pom) during preparation step, in addition to execution 
+                by perform step which is triggered by releaseProfiles tag -->
+            <arguments>-DdoRelease</arguments>
+            <!-- prepare settings -->
+            <preparationGoals>clean verify site</preparationGoals>
+            <!-- completion settings -->
+            <completionGoals>clean verify site</completionGoals>
+            <!-- perform settings -->
+            <useReleaseProfile>false</useReleaseProfile>
+            <releaseProfiles>release</releaseProfiles>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
@@ -221,6 +242,7 @@
                             <!-- Default configuration for all executions -->
                             <outputDirectory>${project.build.directory}/javadocs</outputDirectory>
                             <reportOutputDirectory>${project.reporting.outputDirectory}/javadocs</reportOutputDirectory>
+                            <additionalOptions>${javadoc.opts}</additionalOptions>
                         </configuration>
                         <executions>
                             <execution>
@@ -304,6 +326,15 @@
                 </plugin>
             </plugins>
         </build>
+    </profile>
+    <profile>
+        <id>java8-doclint-disabled</id>
+        <activation>
+            <jdk>[1.8,)</jdk>
+        </activation>
+        <properties>
+            <javadoc.opts>-Xdoclint:none</javadoc.opts>
+        </properties>
     </profile>
   </profiles>
 </project>
