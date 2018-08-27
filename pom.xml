@@ -27,36 +27,52 @@
     <relativePath>../../pom/maven/maven-shared-components/pom.xml</relativePath>
   </parent>
 
+  <groupId>com.github.nruzic.org.apache.maven.shared</groupId>
   <artifactId>maven-filtering</artifactId>
   <version>3.1.2-SNAPSHOT</version>
 
   <name>Apache Maven Filtering</name>
   <description>A component to assist in filtering of resource files with properties from a Maven project.</description>
 
-  <scm>
-    <connection>scm:git:https://gitbox.apache.org/repos/asf/maven-filtering.git</connection>
-    <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/maven-filtering.git</developerConnection>
-    <url>https://github.com/apache/maven-filtering/tree/${project.scm.tag}</url>
-    <tag>HEAD</tag>
-  </scm>
-  <issueManagement>
-    <system>JIRA</system>
-    <url>https://issues.apache.org/jira/browse/MSHARED/component/12326444</url>
-  </issueManagement>
-  <ciManagement>
-    <system>Jenkins</system>
-    <url>https://builds.apache.org/job/maven-box/job/maven-filtering/</url>
-  </ciManagement>
-  <distributionManagement>
-    <site>
-      <id>apache.website</id>
-      <url>scm:svn:https://svn.apache.org/repos/asf/maven/website/components/${maven.site.path}</url>
-    </site>
-  </distributionManagement>
+    <scm>
+        <url>http://github.com/nruzic/maven-filtering</url>
+        <connection>scm:git:http://github.com/nruzic/maven-filtering</connection>
+        <developerConnection>scm:git:git@github.com:nruzic/maven-filtering</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh-snapshot-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh-staging-repo</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <developers>
+        <developer>
+            <id>nruzic</id>
+            <name>Nikola Ružić</name>
+            <email>nikola.ruzic.dev@gmail.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
 
   <properties>
     <surefire.version>2.21.0</surefire.version>
     <mavenVersion>3.0</mavenVersion>
+    <plugin-version-maven-source-plugin>3.0.1</plugin-version-maven-source-plugin>
+    <plugin-version-maven-assembly-plugin>3.1.0</plugin-version-maven-assembly-plugin>
+    <plugin-version-maven-javadoc-plugin>3.0.1</plugin-version-maven-javadoc-plugin>
+    <plugin-version-maven-release-plugin>2.5.3</plugin-version-maven-release-plugin>
+    <version-maven-gpg-plugin>1.6</version-maven-gpg-plugin>
+    <version-nexus-staging-maven-plugin>1.6.7</version-nexus-staging-maven-plugin>
   </properties>
 
   <contributors>
@@ -172,6 +188,122 @@
           </plugin>
         </plugins>
       </reporting>
+    </profile>
+    <profile>
+        <id>release</id>
+        <activation>
+            <property>
+                <name>doRelease</name>
+            </property>
+        </activation>
+        <build>
+            <pluginManagement>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>${plugin-version-maven-source-plugin}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <phase>prepare-package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${plugin-version-maven-javadoc-plugin}</version>
+                        <configuration>
+                            <!-- Default configuration for all executions -->
+                            <outputDirectory>${project.build.directory}/javadocs</outputDirectory>
+                            <reportOutputDirectory>${project.reporting.outputDirectory}/javadocs</reportOutputDirectory>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <phase>prepare-package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <version>${plugin-version-maven-assembly-plugin}</version>
+                        <configuration>
+                            <descriptorSourceDirectory>${project.basedir}/src/main/assemblies</descriptorSourceDirectory>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>assemble-default-binary-distribution</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <configuration>
+                                    <descriptorRefs>
+                                        <descriptorRef>bin</descriptorRef>
+                                    </descriptorRefs>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${version-maven-gpg-plugin}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>${version-nexus-staging-maven-plugin}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh-staging-repo</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                </plugin>
+            </plugins>
+        </build>
     </profile>
   </profiles>
 </project>
