@@ -35,10 +35,10 @@
   <description>A component to assist in filtering of resource files with properties from a Maven project.</description>
 
   <scm>
-    <connection>scm:git:https://gitbox.apache.org/repos/asf/maven-filtering.git</connection>
-    <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/maven-filtering.git</developerConnection>
-    <url>https://github.com/apache/maven-filtering/tree/${project.scm.tag}</url>
-    <tag>HEAD</tag>
+    <connection>scm:git:https://github.com/nruzic/maven-filtering.git</connection>
+    <developerConnection>scm:git:git@github.com:nruzic/maven-filtering.git</developerConnection>
+    <url>https://github.com/nruzic/maven-filtering/tree/${project.scm.tag}</url>
+    <tag>patch/optional-filter-files</tag>
   </scm>
   <issueManagement>
     <system>JIRA</system>
