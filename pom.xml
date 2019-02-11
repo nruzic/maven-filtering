@@ -60,6 +60,18 @@
     <mavenVersion>3.0</mavenVersion>
   </properties>
 
+  <developers>
+      <developer>
+          <id>nruzic</id>
+          <name>Nikola Ružić</name>
+          <email>nikola.ruzic.dev@gmail.com</email>
+          <roles>
+              <role>Developer</role>
+          </roles>
+          <timezone>+1</timezone>
+      </developer>
+  </developers>
+
   <contributors>
     <contributor>
       <name>Graham Leggett</name>
