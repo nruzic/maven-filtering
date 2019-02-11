@@ -29,7 +29,7 @@
 
   <groupId>com.github.nruzic.org.apache.maven.shared</groupId>
   <artifactId>maven-filtering</artifactId>
-  <version>3.1.2-patch1-SNAPSHOT</version>
+  <version>3.1.2-patch1</version>
 
   <name>Apache Maven Filtering</name>
   <description>A component to assist in filtering of resource files with properties from a Maven project.</description>
@@ -38,7 +38,7 @@
     <connection>scm:git:https://github.com/nruzic/maven-filtering.git</connection>
     <developerConnection>scm:git:git@github.com:nruzic/maven-filtering.git</developerConnection>
     <url>https://github.com/nruzic/maven-filtering/tree/${project.scm.tag}</url>
-    <tag>patch/optional-filter-files</tag>
+    <tag>maven-filtering-3.1.2-patch1</tag>
   </scm>
   <issueManagement>
     <system>JIRA</system>
